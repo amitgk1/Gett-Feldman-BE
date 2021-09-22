@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node ./dist"
+    "build-start": "npm run build && node ./dist",
+    "start": "nodemon -w ./src -e ts --exec npm run build-start",
+    "start-prod": "node ./dist"
   },
   "repository": {
     "type": "git",
