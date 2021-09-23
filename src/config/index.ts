@@ -6,8 +6,10 @@ export interface Config {
 }
 
 const mssqlConfig: DBOption = {
-    name: "HelpMan",
+    name: "Gett-Feldman",
     server: "RONNIE_YOGA",
+    user: "jarvis",
+    password: "Aa123456"
 }
 
 enum ENVIRONMENTS {

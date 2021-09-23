@@ -1,21 +1,33 @@
-import sql, { ConnectionPool } from "mssql/msnodesqlv8";
-import config from "../config";
+import sql, { ConnectionPool } from "mssql";
+import config from "../../config";
 
 class MSSQL {
-    connection: ConnectionPool
+    pool: ConnectionPool
+    poolConnection: Promise<ConnectionPool>
+
 
     constructor() {
-        this.connection = new sql.ConnectionPool({
+        this.pool = new sql.ConnectionPool({
             database: config.db.name,
             server: config.db.server,
-            driver: "msnodesqlv8",
+            user: config.db.user,
+            password: config.db.password,
             options: {
-                trustedConnection: true
+                trustServerCertificate: true
             }
         })
+        this.poolConnection = this.pool.connect();
     }
 
-    execute(executionString: string) {
-        return this.connection.query(executionString);
+    async execute<T>(executionString: string) {
+        await this.poolConnection;
+        try {
+            const request = this.pool.request();
+            return request.query<T>(executionString);
+        } catch (err) {
+            console.error(err);
+        }
     }
 }
+
+export default new MSSQL();
